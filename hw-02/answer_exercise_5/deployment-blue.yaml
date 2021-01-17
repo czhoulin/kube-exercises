@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ex-5-blue
+  labels: 
+    app: nginx-server
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx-server
+      version: "1.18"
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+        version: "1.18"
+    spec:
+      containers:
+      - image: nginx:1.18
+        name: nginx
+        ports:
+            - name: http
+              containerPort: 80

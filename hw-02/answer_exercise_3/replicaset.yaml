@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: ex-3-nginx-server
+  labels: 
+    app: nginx-server
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+        labels:
+          tier: backend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19.6
+        resources:
+          limits:
+            cpu: "256m"
+            memory: "100Mi"
+          requests:
+            cpu: "256m"
+            memory: "100Mi"
