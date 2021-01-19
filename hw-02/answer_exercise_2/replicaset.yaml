@@ -4,16 +4,15 @@ metadata:
   name: ex-2-nginx-server
   labels: 
     app: nginx-server
-    tier: backend
 spec:
   replicas: 3
   selector:
     matchLabels:
-      tier: backend
+      app: nginx-server
   template:
     metadata:
         labels:
-          tier: backend
+          app: nginx-server
     spec:
       containers:
       - name: nginx
