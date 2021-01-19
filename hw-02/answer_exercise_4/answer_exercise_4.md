@@ -102,7 +102,7 @@ Vamos que, a diferencia de la estrategia Recreate, lo primero que pasa no es que
 
 A la que ya tenemos dos pods de nueva versión corriendo, se comienzan a eliminar dos pods de la antigua versión. Hasta que ya solo tenemos pods de nueva versión y se han eliminado todos los de la antigua.
 
-Con la opción _--record_ se han podido guardar los cambios en el deployment. Podemos consultar el historial ejecutando:
+Con la opción _--record_ se han podido guardar los cambios a lo largo del deployment. Podemos consultar el historial ejecutando:
 
 ~~~
 kubectl rollout history deployment ex-4-nginx-server
