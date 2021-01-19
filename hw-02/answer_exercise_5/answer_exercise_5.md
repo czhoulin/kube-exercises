@@ -7,11 +7,11 @@ Adjunta todos los ficheros para crear esta prueba de concepto.
 ## Answer
 
 Estrategia:
-- La versión v1.0 está en producción.
-- Levantamos la versión v2.0.
-- Esperamos a que v2.0 esté lista.
-- Redirigimos el tráfico de v1.0 a v2.0
-- Bajamos la versión v1.0
+- La versión Blue(1.18) está en producción.
+- Levantamos la versión Green(1.19.6).
+- Esperamos a que Green esté lista.
+- Redirigimos el tráfico de Blue a Green.
+- Bajamos la versión Blue.
 
 Pasos a seguir:
 1. Creamos el objeto deployment Blue
@@ -45,9 +45,14 @@ Pasos a seguir:
     ~~~
     kubectl get pods -w
     ~~~
-7. Hacemos que ambos servicios apunten a la versión nueva:
+7. Hacemos que el servicio Blue apunte a la versión nueva:
     ~~~
     kubectl patch service blue-service -p '{"spec":{"selector":{"version": "1.19.6"}}}'
     ~~~
 
-    No hace falta crear dos servicios
+    - No seria necesario crear dos servicios (redirigiendo el primero ya vemos los cambios), pero considerando que probablemente querríamos acceder a la versión Green una vez desplegada para hacer pruebas, es buena práctica crear un servicio para ella.
+
+8. Eliminamos los pods de la antigua versión:
+    ~~~
+    kubectl delete deployment deployment-green.yaml
+    ~~~
