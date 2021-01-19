@@ -21,12 +21,13 @@ Minifiesto yaml:
 apiVersion: v1
 kind: Pod
 metadata:
+  name: ex-1-nginx-server
   labels: 
     app: nginx-server
-name: ex-1-nginx-server // va dentro o fuera de metadata?
 spec:
   containers:
-  - image: nginx:1.19.4
+  - name: nginx
+    image: nginx:1.19.6
     resources:
       limits:
         cpu: "256m"
@@ -34,15 +35,6 @@ spec:
       requests:
         cpu: "256m"
         memory: "100Mi"
-~~~~
-
-Previa (opcional, excepto _minikube start)_:
-~~~~
-  minikube start
-  minikube status
-  minikube addons list
-  minikube addons enable metrics-server (me permite ver el estado del cluster / las métricas no estarán disponibles inmediatamente)
-  kubectl get node (vemos que minikube solo tiene un nodo, es una VM)
 ~~~~
 
 Creamos el pod:
