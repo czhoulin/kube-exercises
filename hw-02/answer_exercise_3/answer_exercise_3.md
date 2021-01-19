@@ -48,9 +48,18 @@ spec:
 ~~~~
 - ClusterIP es el tipo de servicio por defecto (se puede especificar en el manifiesto pero no es necesario). Abre el acceso a la app dentro del cluster, sin acceso desde el exterior.
 
+Ejemplo:
+
 ![image](./images/screenshot_1.png)
 
-- Como solo es accesible desde el cluster, podemos iniciar un proxy entre entre el cluster y el host(_kubectl proxy --port=8080_). Con esto podemos realizar peticiones al localhost en el puerto especificado y obtener información del servicio.
+- Desplegamos los pods a los que apuntará el servicio (replicaset.yaml) y creamos el servicio.
+- Como solo es accesible desde el cluster, podemos iniciar un proxy entre entre el cluster y el host. Con esto podemos realizar peticiones en localhost y obtener información del servicio.
+
+![image](./images/screenshot_2.png)
+
+
+
+![image](./images/screenshot_3.png)
 
 ### Service 3: NodePort
 
@@ -70,10 +79,10 @@ spec:
       targetPort: 80
 ~~~~
 
-![image](./images/screenshot_2.png)
+![image](./images/screenshot_4.png)
 - Una vez creado el service, podemos ver que es de tipo NodePort y que el puerto del nodo (asignado automáticamente dentro del rango 30000-32767 si no se especifica) es 32696.
 
-![image](./images/screenshot_3.png)
+![image](./images/screenshot_5.png)
 - Sabiendo la IP de la máquina (en este caso, minikube) y el puerto del nodo, podemos ver lo que expone nuestra la aplicación. 
 
 
