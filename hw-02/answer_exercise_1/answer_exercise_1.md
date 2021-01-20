@@ -101,6 +101,6 @@ Vemos que está corriendo:
     En el output vemos que _qosClass_ es _Guaranteed_.
     Esta calidad de servicio se da cuando el contenedor tiene una memoria de request que coincide con la memoria límite, y la CPU de request coincide con la CPU límite.
 
-    La _qosClass_ sería _Burstable_ si el contenedor tuviera definido la memoria o la CPU de request.
+    La _qosClass_ sería _Burstable_ si el contenedor no cumpliera con las condiciones definidas para _Guaranteed_ y tuviera definido la memoria o la CPU de request.
 
     La _qosClass_ sería _BestEffort_ si el contenedor no tuviera definido ningún recurso de limit o request.
