@@ -99,7 +99,7 @@ Vemos que está corriendo:
     ![image](./images/screenshot_5.png)
 
     En el output vemos que _qosClass_ es _Guaranteed_.
-    Esta calidad de servicio se da cuando el contenedor tiene una memoria de request que coincide con la memoria límite, y la CPU de request coincide con la CPU límite. Si especificamos los recursos de memoria y CPU límite del contendor pero no los de request, Kubernetes los asignará automáticamente para que coincidan.
+    Esta calidad de servicio se da cuando el contenedor tiene una memoria de request que coincide con la memoria límite, y la CPU de request coincide con la CPU límite.
 
     La _qosClass_ sería _Burstable_ si el contenedor tuviera definido la memoria o la CPU de request.
 
