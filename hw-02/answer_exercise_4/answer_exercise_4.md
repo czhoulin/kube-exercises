@@ -36,6 +36,13 @@ spec:
       containers:
       - image: nginx:1.19.6
         name: nginx
+        resources:
+          limits:
+            cpu: "256m"
+            memory: "100Mi"
+          requests:
+            cpu: "256m"
+            memory: "100Mi"
 ~~~~
 
 Creamos el objeto:
@@ -82,6 +89,13 @@ spec:
       containers:
       - image: nginx:1.19.6
         name: nginx
+        resources:
+          limits:
+            cpu: "256m"
+            memory: "100Mi"
+          requests:
+            cpu: "256m"
+            memory: "100Mi"
 ~~~~
 - Nota: configuramos el deployment para que no haya indisponibilidad (_maxUnavailable: 0_) y que se actualicen un máximo de 2 pods al mismo tiempo (_maxSurge: 2_).
 
