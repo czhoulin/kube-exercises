@@ -35,7 +35,6 @@ Pasos a seguir:
     - _export PORT_BLUE=$(kubectl get service blue-service -o 'jsonpath={.spec.ports[0].nodePort}')_: extraemos el puerto a variable de entorno
     - echo $PORT_BLUE: comprobamos el valor de la variable
     - _while true; do curl ${MINIKUBE_IP}:${PORT_BLUE}/error; echo ‘\n’; sleep .5; done_: vemos que van cargando las versiones 1.18
-    - _kubectl get service_: en otra ventana vemos el service corriendo
 3. Creamos el objeto deployment Green
     ~~~
     kubectl apply -f deployment-green.yaml
@@ -57,7 +56,7 @@ Pasos a seguir:
 
 6. Eliminamos los pods de la antigua versión:
     ~~~
-    kubectl delete deployment deployment-green.yaml
+    kubectl delete deployment ex-5-blue
     ~~~
 
     ![image](./images/screenshot_5.png)
