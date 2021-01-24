@@ -73,7 +73,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt
 
 - Creamos un objeto Secret que contenga el certificado:
 ~~~
-kubectl -n sandbox create secret tls carolina.student-tls-cert --key tls.key --cert tls.crt
+kubectl create secret tls carolina.student-tls-cert --key tls.key --cert tls.crt -n sandbox 
 ~~~
 ![image](./images/screenshot_9.png)
 
@@ -88,7 +88,7 @@ kubectl -n sandbox create secret tls carolina.student-tls-cert --key tls.key --c
 spec:
   tls:
   - hosts:
-      - https-carolina.student.lasalle.com
+      - carolina.student.lasalle.com
     secretName: carolina.student-tls-cert
 ~~~
 ~~~
@@ -107,5 +107,5 @@ Validamos estos cambios por el navegador web.
 
 También podemos validarlo por terminal
 ~~~ UPDATE CERTIFICATE FIELD
-curl --cacert <certificate> https://carolina.student.lasalle.com
+curl --cacert carolina.student-tls-cert https://carolina.student.lasalle.com
 ~~~
