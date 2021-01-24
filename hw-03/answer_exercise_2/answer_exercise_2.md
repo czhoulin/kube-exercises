@@ -7,22 +7,25 @@
 
 ## Answer
 
-Creamos las réplicas
+Creamos las réplicas (vemos que se crean de forma ordenada):
 ~~~
-kubectl get pods -w (en otra ventana) → vemos que se crearán de forma ordenada
-kubebectl create -f mongodb-statefulset.yaml
+kubectl get pods -w (en otra ventana) 
+kubectl create -f mongodb-statefulset.yaml
 ~~~
-Creamos el servicio
+
+![image](./images/screenshot_1.png)
+
+Creamos el servicio que estionará las IPs de los pods desplegados:
 ~~~
 kubectl create -f mongodb-svc.yaml
-kubect get svc
-kubectl get endpoint mongodb-svc
+kubectl get svc
+kubectl get endpoints mongodb-svc
 ~~~
-Ahora tenemos 3 réplicas que no están conectadas entre sí. Queremos un cluster que tenga HA.
 
+Ahora tenemos 3 réplicas que no están conectadas entre sí. Queremos un cluster que tenga alta disponibilidad, por lo que:
 - Entramos dentro de un pod 
     ~~~
-    kubect exec -it mongo-0 sh
+    kubectl exec -it mongo-statefulset-0 -- sh
     ~~~
 
 - Accedemos al cliente de mongo 
@@ -30,43 +33,71 @@ Ahora tenemos 3 réplicas que no están conectadas entre sí. Queremos un cluste
     mongo
     ~~~
 
+    ![image](./images/screenshot_2.png)
+
 - Estamos conectados dentro de la primera réplica. Vemos que no está configurada la replicaSet con la mongoDB. Creamos el cluster con nuestras 3 réplicas:
     ~~~
     rs.status() 
-    rs.initiate…. → iniciar un cluster de mongoDB
+
+    rs.initiate({_id: "rs0", version: 1, members: [
+    { _id: 0, host : "mongo-statefulset-0.mongodb-svc.default.svc.cluster.local:27017" },
+    { _id: 1, host : "mongo-statefulset-1.mongodb-svc.default.svc.cluster.local:27017" },
+    { _id: 2, host : "mongo-statefulset-2.mongodb-svc.default.svc.cluster.local:27017" }
+    ]});
     ~~~
 
-- Vemos el cluster con las reps inicializadas
-    ~~~
-    rs.conf() → v
-    ~~~
+    ![image](./images/screenshot_3.png)
 
-    ![image](./images/screenshot_1.png)
+- Vemos el cluster con las réplicas inicializadas
+    ~~~
+    rs.conf() 
+    ~~~
+    ![image](./images/screenshot_4a.png)
+    ![image](./images/screenshot_4b.png)
+    ![image](./images/screenshot_4c.png)
 
 Si operamos en una de las réplicas veremos que los cambios se aplican en las otras.
 
-Levantamos express y añadimos una base de datos:
+Levantamos express:
 ~~~
-kubectl get pods -w
 kubectl create -f mongoexpress-deploy.yaml
 kubectl port-forward podName 8088:8081
 ~~~
-Creamos una colección + un documento:
-![image](./images/screenshot_2.png)
 
-Vemos este cambio en cualquiera de las instancias
+![image](./images/screenshot_5.png)
+
+![image](./images/screenshot_6.png)
+
+Añadimos una base de datos, creamos una nueva colección y añadimos un documento:
+- Base de datos _students_
+- Colección _Class\_2020-2021_
+- Documento con _"name": "Carolina"_
+
+![image](./images/screenshot_7.png)
+
+![image](./images/screenshot_8.png)
+
+![image](./images/screenshot_9.png)
+
+Vemos este cambio en cualquiera de las instancias:
+
+![image](./images/screenshot_10.png)
+
+![image](./images/screenshot_11.png)
+- Vemos la nueva base de datos y la nueva colección
+
+![image](./images/screenshot_12.png)
+- Al intentar acceder a la colección nos encontramos con un error por la sintaxis. Se opta por un cambio rápido en el nombre de la colección.
+
+![image](./images/screenshot_13.png)
+- Vemos el nombre de la colección actualizado. 
+- Vemos el documento añadido.
+
+Igual que en el momento de creación, si desescalamos a dos el número de réplicas veremos que se hace de forma ordenada, comenzando por la última intancia. Con un objeto de tipo ReplicaSet este (des)escalado hubiese sido aleatorio.
+
 ~~~
-kubectl exec -it mongo-2 sh → mongo
-rs.secondaryOk()
-show dbs
-use MYDATABASENAME
-show tables
-db.MYCOLLECTION.find() → vemos mi cambio
-exit
+kubectl scale --replicas=2 statefulset mongo-statefulset
 ~~~
 
-Igual que en el momento de creación, si desescalamos a dos el número de réplicas veremos que se hace de forma ordenada, comenzando por la última intancia (mongo-2)
-~~~
-kubectl scale --replicas=2 statefulset mongo
-~~~
-Con ReplicaSet hubiese sido aleatorio.
+![image](./images/screenshot_13.png)
+
