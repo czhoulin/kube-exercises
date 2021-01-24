@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels: 
+    app: nginx-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-server
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+    spec:
+      containers:
+      - image: nginx:1.19.6
+        name: nginx
+        ports:
+            - name: http
+              containerPort: 80
+        resources:
+          limits:
+            cpu: "6m"
+            memory: "128Mi"
+          requests:
+            cpu: "6m"
+            memory: "128Mi"
