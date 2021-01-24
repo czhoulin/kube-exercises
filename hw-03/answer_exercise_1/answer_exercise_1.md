@@ -111,6 +111,10 @@ Validamos estos cambios por el navegador web.
 
     ![image](./images/screenshot_12.png)
 
+    ![image](./images/screenshot_16.png)
+
+    ![image](./images/screenshot_15.png)
+
 También podemos validarlo por terminal
 ~~~ 
 cd certificate
