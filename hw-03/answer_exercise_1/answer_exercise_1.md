@@ -9,7 +9,7 @@
 - Exponer el puerto 80 de los pods
 - Limits:
     - CPU: 20 milicores
-    - emoria: 128Mi
+    - Memoria: 128Mi
 - Requests:
     - CPU: 20 milicores
     - Memoria: 128Mi
@@ -24,9 +24,6 @@ Comenzamos con un objeto Deployment (nginx-deploy.yaml):
 ~~~
 kubectl create namespace sandbox
 kubectl create -f nginx-deploy.yaml -n sandbox
-kubectl get all -n sandbox
-kubectl describe deploy nginx-deploy -n sandbox
-kubectl get pods -n sandbox -w
 ~~~
 ![image](./images/screenshot_1.png)
 
@@ -50,7 +47,7 @@ Accedemos a la página principal de dos maneras:
 
     ![image](./images/screenshot_6.png)
 
-- Terminal - instrucción: curl -k http://carolina.student.lasalle.com
+- Terminal - Instrucción: curl -k http://carolina.student.lasalle.com
 
     ![image](./images/screenshot_4.png)
 
@@ -64,48 +61,60 @@ sudo nano /etc/hosts
 
 Este proceso no es seguro. Accederemos al servicio mediante protocolo HTTS creando un certificado y un Secret que lo contenga.
 - Para crear el certificado se ha usado OpenSSL
-~~~
-cd certificate
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=carolina.student.lasalle.com"
-~~~
-![image](./images/screenshot_7.png)
-![image](./images/screenshot_8.png)
+    ~~~
+    cd certificate
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=carolina.student.lasalle.com"
+    ~~~
+
+    ![image](./images/screenshot_7.png)
+
+    ![image](./images/screenshot_8.png)
 
 - Creamos un objeto Secret que contenga el certificado:
-~~~
-kubectl create secret tls carolina.student-tls-cert --key tls.key --cert tls.crt -n sandbox 
-~~~
-![image](./images/screenshot_9.png)
+    ~~~
+    kubectl create secret tls carolina.student-tls-cert --key tls.key --cert tls.crt -n sandbox 
+    ~~~
+
+    ![image](./images/screenshot_9.png)
 
 - Confirmamos la creación del secret:
-~~~
- kubectl get secret carolina.student-tls-cert -o yaml -n sandbox
-~~~
-![image](./images/screenshot_10.png)
+    ~~~
+    kubectl get secret carolina.student-tls-cert -o yaml -n sandbox
+    ~~~
 
-- Añadimos la referencia en Ingress el _spec_ del manifiesto (nginx-ingress-ssl.yaml):
-~~~
-spec:
-  tls:
-  - hosts:
-      - carolina.student.lasalle.com
-    secretName: carolina.student-tls-cert
-~~~
-~~~
-kubectl create -f nginx-ingress-ssl.yaml -n sandbox
-~~~
-![image](./images/screenshot_13.png)
+    ![image](./images/screenshot_10.png)
+
+- Añadimos la referencia en el apartado _spec_ del manifiesto yaml del ingress controller(nginx-ingress-ssl.yaml):
+    ~~~
+    spec:
+    tls:
+    - hosts:
+        - carolina.student.lasalle.com
+        secretName: carolina.student-tls-cert
+    ~~~
+    ~~~
+    kubectl create -f nginx-ingress-ssl.yaml -n sandbox
+    ~~~
+
+    ![image](./images/screenshot_13.png)
 
 Validamos estos cambios por el navegador web. 
-- En la barra superior podemos comprobar que estamos accediendo mediante HTTPS:
+- Nos aparece un aviso porque el el certificado no está expedido por una entidad de confianza. Visitamos igualmente el sitio:
 
     ![image](./images/screenshot_11.png)
+
+- En la barra superior podemos comprobar que estamos accediendo mediante HTTPS (CHECK POR QUÉ NO):
+
+    ![image](./images/screenshot_XX.png)
 
 - Podemos ver el certificado creado:
 
     ![image](./images/screenshot_12.png)
 
 También podemos validarlo por terminal
-~~~ UPDATE CERTIFICATE FIELD
-curl --cacert carolina.student-tls-cert https://carolina.student.lasalle.com
+~~~ 
+cd certificate
+curl --cacert tls.crt https://carolina.student.lasalle.com
 ~~~
+
+![image](./images/screenshot_14.png)
