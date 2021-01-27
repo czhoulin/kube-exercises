@@ -20,7 +20,7 @@ Una vez realizadas las pruebas con el protocolo HTTP, se pide acceder al servici
 
 ## Answer
 
-Comenzamos con un objeto Deployment (nginx-deploy.yaml):
+Comenzamos con un objeto Deployment (nginx-deploy.yaml) en el namespace _sandbox_:
 ~~~
 kubectl create namespace sandbox
 kubectl create -f nginx-deploy.yaml -n sandbox
@@ -38,20 +38,20 @@ kubectl get endpoints nginx-svc -n sandbox
 Creamos el objeto Ingress (nginx-ingress.yaml)
 ~~~
 kubectl create -f nginx-ingress.yaml -n sandbox
-kubectl get nginx-ingress -n sandbox
+kubectl get ingress nginx-ingress -n sandbox
 ~~~
 ![image](./images/screenshot_3.png)
 
 Accedemos a la página principal de dos maneras: 
-- Navegador web - URL: http://carolina.student.lasalle.com
+- Navegador web --- URL: http://carolina.student.lasalle.com
 
     ![image](./images/screenshot_6.png)
 
-- Terminal - Instrucción: curl -k http://carolina.student.lasalle.com
+- Terminal --- Instrucción: curl -k http://carolina.student.lasalle.com
 
     ![image](./images/screenshot_4.png)
 
-Herramientas como Gas Mask (macOS) nos facilitan este acceso a partir del DNS; no hace falta ejecutar un _port-forward_ (que es en localhost y no sirve realmente en el mundo de producción) ni hace falta crear un service (que nos da acceso con una dirección con formato &lt;nombre&gt;:&lt;puerto&gt;).
+Herramientas como Gas Mask (Mac) nos facilitan este acceso a partir del DNS; no hace falta ejecutar un _port-forward_ (que es en localhost y no sirve realmente en el mundo de producción) ni hace falta crear un service (que nos da acceso con una dirección con formato &lt;nombre&gt;:&lt;puerto&gt;).
 
 En este caso, se ha modificado el Hosts File por terminal, añadiendo el nombre de dominio _carolina.student.lasalle.com_ para que se traduzca como la ip de minikube:
 ~~~
@@ -61,25 +61,26 @@ sudo nano /etc/hosts
 
 Este proceso no es seguro. Accederemos al servicio mediante protocolo HTTS creando un certificado y un Secret que lo contenga.
 - Para crear el certificado se ha usado OpenSSL
+
+    ![image](./images/screenshot_7.png)
+
     ~~~
     cd certificate
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=carolina.student.lasalle.com"
     ~~~
 
-    ![image](./images/screenshot_7.png)
-
     ![image](./images/screenshot_8.png)
 
 - Creamos un objeto Secret que contenga el certificado:
     ~~~
-    kubectl create secret tls carolina.student-tls-cert --key tls.key --cert tls.crt -n sandbox 
+    kubectl create secret tls student-secret --key tls.key --cert tls.crt -n sandbox 
     ~~~
 
     ![image](./images/screenshot_9.png)
 
 - Confirmamos la creación del secret:
     ~~~
-    kubectl get secret carolina.student-tls-cert -o yaml -n sandbox
+    kubectl get secret student-secret -o yaml -n sandbox
     ~~~
 
     ![image](./images/screenshot_10.png)
@@ -90,7 +91,7 @@ Este proceso no es seguro. Accederemos al servicio mediante protocolo HTTS crean
     tls:
     - hosts:
         - carolina.student.lasalle.com
-        secretName: carolina.student-tls-cert
+        secretName: student-secret
     ~~~
     ~~~
     kubectl create -f nginx-ingress-ssl.yaml -n sandbox
@@ -103,17 +104,13 @@ Validamos estos cambios por el navegador web.
 
     ![image](./images/screenshot_11.png)
 
-- En la barra superior podemos comprobar que estamos accediendo mediante HTTPS (CHECK POR QUÉ NO):
-
-    ![image](./images/screenshot_XX.png)
-
-- Podemos ver el certificado creado:
-
-    ![image](./images/screenshot_12.png)
+- Podemos comprobar que estamos accediendo mediante HTTPS y ver el certificado creado:
 
     ![image](./images/screenshot_16.png)
 
     ![image](./images/screenshot_15.png)
+
+    ![image](./images/screenshot_12.png)
 
 También podemos validarlo por terminal
 ~~~ 

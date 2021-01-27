@@ -6,7 +6,7 @@ spec:
   tls:
   - hosts:
       - carolina.student.lasalle.com
-    secretName: carolina.student-tls-cert
+    secretName: student-secret
   rules:
   - host: carolina.student.lasalle.com
     http:
