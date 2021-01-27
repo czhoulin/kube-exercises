@@ -58,7 +58,11 @@ Ahora tenemos 3 réplicas que no están conectadas entre sí. Queremos un cluste
 
 Si operamos en una de las réplicas veremos que los cambios se aplican en las otras.
 
-Levantamos express:
+Podemos hacerlo directamente por terminal:
+
+![image](./images/screenshot_15.png)
+
+Para el ejercicio, levantamos express para hacerlo por UI:
 ~~~
 kubectl create -f mongoexpress-deploy.yaml
 kubectl port-forward podName 8088:8081
@@ -93,11 +97,23 @@ Vemos este cambio en cualquiera de las instancias:
 - Vemos el nombre de la colección actualizado. 
 - Vemos el documento añadido.
 
+Tenemos un volumen con _mountPath=/data/db_. 
+- Vemos el cambio en el directorio tras añadir la base de datos.
+
+    ![image](./images/screenshot_16.png)
+
+    ![image](./images/screenshot_17.png)
+
+- Si eliminamos el statefulset y lo volvemos a levantar, veremos que nuestros cambios han persistido.
+
+    ![image](./images/screenshot_18.png)
+
+    ![image](./images/screenshot_19.png)
+
 Igual que en el momento de creación, si desescalamos a dos el número de réplicas veremos que se hace de forma ordenada, comenzando por la última intancia. Con un objeto de tipo ReplicaSet este (des)escalado hubiese sido aleatorio.
 
 ~~~
 kubectl scale --replicas=2 statefulset mongo-statefulset
 ~~~
 
-![image](./images/screenshot_13.png)
-
+![image](./images/screenshot_14.png)
