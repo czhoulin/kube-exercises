@@ -97,8 +97,10 @@ Vemos este cambio en cualquiera de las instancias:
 - Vemos el nombre de la colección actualizado. 
 - Vemos el documento añadido.
 
-Tenemos un volumen con _mountPath=/data/db_. 
+Tenemos persistencia con _mountPath=/data/db_. 
 - Vemos el cambio en el directorio tras añadir la base de datos.
+
+    ![image](./images/screenshot_20.png)
 
     ![image](./images/screenshot_16.png)
 
