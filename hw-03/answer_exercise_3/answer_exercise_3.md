@@ -31,7 +31,3 @@ kubectl run -i --tty load-generator --rm --image=busybox --restart=Never  -- sh 
     ![image](./images/screenshot_3.png)
 
 - Vemos que cuando el consumo pasa del umbral, se han escalado las réplicas al máximo. Pasamos de 5 a 10 réplicas.
-
-- Acabamos con la carga que hemos forzado y, dando un margen de tiempo, volvemos a consultar el estado del deployment. 
-
-    ![image](./images/screenshot_4.png)
