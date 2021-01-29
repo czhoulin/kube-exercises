@@ -11,15 +11,16 @@ Tenemos un deployment(nginx-deploy.yaml) y un servicio(nginx-svc.yaml).
 
 ![image](./images/screenshot_1.png)
 
-Desplegamos los pods y el servicio, y con el server corriendo ejecutamos:
+Desplegamos los pods y el servicio, y con el server corriendo podemos ejecutar:
 ~~~
 kubectl autoscale deployment nginx-deploy --cpu-percent=50 --min=3 --max=10
 ~~~
-- Se crea un Horizontal Pod Autoscaler. En el comando especificamos que se mantendrán entre 1 y 10 réplicas, escalando y desescalando para mantener un uso medio del 50% de CPU entre todas.
+- Se crea un Horizontal Pod Autoscaler con apiVersion autoscaling/V1. En el comando especificamos que se mantendrán entre 3 y 10 réplicas, escalando y desescalando para mantener un uso medio del 50% de CPU entre todas.
+- También podemos probar con la versión autoscaling/v2beta2 partiendo del archivo nginx-hpa.yaml. 
 
-    ![image](./images/screenshot_2.png)
+![image](./images/screenshot_2.png)
 
-- Comprobamos el status del autoscaler (_kubectl get hpa_). El consumo de CPU debería ser 0 porque no estamos realizando peticiones. Check why: UNKNOWN TARGET.
+- Comprobamos el status del autoscaler (_kubectl get hpa_).
 
 Incrementamos la carga para ver cómo trabaja el autoscaler:
 ~~~
@@ -34,11 +35,3 @@ kubectl run -i --tty load-generator --rm --image=busybox --restart=Never  -- sh 
 - Acabamos con la carga que hemos forzado con un simple ctrl+C y, dando un margen de tiempo, olvemos a consultar el estado del deployment. 
 
     ![image](./images/screenshot_4.png)
-
-**TODO**: CHECK ERROR en metrics server?
-- metrics server enabled (minikube addons enable metrics-server)
-- kubectl -n kube-system rollout status deployment metrics-server
-- kubectl top node OK
-- kubectl top pod
-    - W0127 09:46:27.013695  138078 top_pod.go:265] Metrics not available for pod default/nginx-deploy-7fc894f9f8-58wq2, age: 3m55.01368723s
-    - error: Metrics not available for pod default/nginx-deploy-7fc894f9f8-58wq2, age: 3m55.01368723s

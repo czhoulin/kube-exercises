@@ -119,3 +119,5 @@ curl --cacert tls.crt https://carolina.student.lasalle.com
 ~~~
 
 ![image](./images/screenshot_14.png)
+
+NOTE: para este ejercicio se han subido todos los archivos utilizados (incluyendo el certificado). En un caso real, dentro del paradigma de GitOps, idealmente se hubiese guardado el Secret de forma declarativa para contener esta información sensible. Para guardar este secret de forma segura en el repositorio, se hubiese utilizado un SealedSecret, para que solo el controlador del clúster pudiese desencriptarlo.
