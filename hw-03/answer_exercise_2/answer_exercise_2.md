@@ -15,7 +15,7 @@ kubectl create -f mongodb-statefulset.yaml
 
 ![image](./images/screenshot_1.png)
 
-Creamos el servicio que estionará las IPs de los pods desplegados:
+Creamos el servicio que gestionará las IPs de los pods desplegados:
 ~~~
 kubectl create -f mongodb-svc.yaml
 kubectl get svc
