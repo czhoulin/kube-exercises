@@ -15,7 +15,7 @@ kubectl create -f mongodb-statefulset.yaml
 
 ![image](./images/screenshot_1.png)
 
-Creamos el servicio que gestionará las IPs de los pods desplegados:
+Creamos el servicio que apuntará a los pods desplegados:
 ~~~
 kubectl create -f mongodb-svc.yaml
 kubectl get svc
@@ -119,3 +119,5 @@ kubectl scale --replicas=2 statefulset mongo-statefulset
 ~~~
 
 ![image](./images/screenshot_14.png)
+
+Con Deployments y ReplicaSets, tratamos con aplicaciones _stateless_. El StatefulSet es un recurso para gestionar aplicaciones _stateful_. Cada réplica tiene su estado; para cada una se crea un PersistenVolumeClaim. Con ReplicaSet habría un volumen para todas las réplicas.
