@@ -1,0 +1,107 @@
+pipeline {
+	agent any
+
+	environment {
+		dotnet = 'C:\\Program Files (x86)\\dotnet\\'
+		SlackChannel = '#deployments'
+	}
+
+	options {
+		ansiColor('vga')
+	}
+
+	stages {
+		stage(‘Start’) {
+			steps {
+				echo "git checkout"
+				git credentialsID: 'exerciseID', 
+				url: 'https://github.com/exerciseAccount/exerciseRepository.git',
+				branch: 'main'
+			}
+		}
+
+		stage(‘Restore packages’) {
+			steps {
+				bat "dotnet restore ExerciseProjectPath\\ExerciseProject.csproj"
+			}
+		}
+
+		stage(Clean) {
+			steps {
+				bat "dotnet clean ExerciseProjectPath\\ExerciseProject.csproj"
+			}
+		}
+
+		stage(‘Build’) {
+			steps {
+				bat "dotnet build ExerciseProjectPath\\ExerciseProject.csproj --configuration Release" 
+			}
+		}
+
+		stage(‘Test: unit tests’) {
+			steps {
+				dotnet build "ExerciseProjectPath\\ExerciseProjectUnitTest.csproj"
+			}
+		}
+
+		stage(‘Test: integration tests) {
+			steps {
+				dotnet build "ExerciseProjectPath\\ExerciseProjectIntegrationTest.csproj"
+			}
+		}
+
+		stage(‘Publish’) {
+			steps {
+				bat "dotnet publish ExerciseProjectPath\\ExerciseProject.csproj"
+			}
+		}
+
+		stage(‘Docker build’) {
+			steps {
+				docker build -t dockerhubuser/exerciseApp:v0.${BUILD_NUMBER} .
+			}
+		}
+
+		stage(‘Docker registry’) {
+			steps {
+				docker login -u dockerhubuser -p dockerhubpassword -e user@domain.com
+				docker push dockerhubuser/exerciseApp:v0.${BUILD_NUMBER}
+			}
+		}
+
+		stage(‘Deploy Development) {
+			when { not { branch demo; } not { branch main; } }
+
+			steps {
+				echo "do stuff"
+				echo "sh(\"kubectl get namespace development || kubectl create namespace development\")"
+			}
+		}
+
+		stage(‘Deploy Demo) {
+			when { anyOf { branch develop; } }
+
+			steps {
+				echo "do stuff"
+				echo "sh(\"kubectl get namespace demo || kubectl create namespace demo\")"
+			}
+		}
+
+		stage(‘Deploy Pro’) {
+			when { anyOf { branch main; } }
+
+			steps {
+				echo "do stuff"
+				echo "sh(\"kubectl get namespace production || kubectl create namespace production\")"
+				echo "do more stuff and specify url to access service"
+			}
+		}
+
+		post {
+			changed {
+				echo "use library to access this method"
+				echo "NotifySlackStatusChange(buildStatus: currentBuild.currentResult, channel: env.SlackChannel)"
+			}
+		}
+	}
+}
