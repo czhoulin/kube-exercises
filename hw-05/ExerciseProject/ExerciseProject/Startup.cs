@@ -35,7 +35,9 @@ namespace ExerciseProject
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=WeatherForecast}/{action=Get}/{id?}");
             });
         }
     }
