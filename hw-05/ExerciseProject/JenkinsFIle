@@ -16,37 +16,37 @@ pipeline {
 
 		stage('Restore packages') {
 			steps {
-				echo "bat 'dotnet restore ExerciseProjectPath\\ExerciseProject.csproj'"
+				echo "bat 'dotnet restore ExerciseProject\\ExerciseProject.csproj'"
 			}
 		}
 
 		stage('Clean') {
 			steps {
-				echo "bat 'dotnet clean ExerciseProjectPath\\ExerciseProject.csproj'"
+				echo "bat 'dotnet clean ExerciseProject\\ExerciseProject.csproj'"
 			}
 		}
 
 		stage('Build') {
 			steps {
-				echo "bat 'dotnet build ExerciseProjectPath\\ExerciseProject.csproj --configuration Release'" 
+				echo "bat 'dotnet build ExerciseProject\\ExerciseProject.csproj --configuration Release'" 
 			}
 		}
 
 		stage('Test: unit') {
 			steps {
-				echo "dotnet build 'ExerciseProjectPath\\ExerciseProjectUnitTest.csproj'"
+				echo "dotnet test ExerciseProjectUnitTest\\ExerciseProjectUnitTest.csproj"
 			}
 		}
 		
 		stage('Test: integration') {
 			steps {
-				echo "dotnet build 'ExerciseProjectPath\\ExerciseProjectIntegrationTest.csproj'"
+				echo "dotnet test ExerciseProjectIntegrationTest\\ExerciseProjectUnitTest.csproj"
 			}
 		}
 
 		stage('Publish') {
 			steps {
-				echo "bat 'dotnet publish ExerciseProjectPath\\ExerciseProject.csproj'"
+				echo "bat 'dotnet publish ExerciseProject\\ExerciseProject.csproj'"
 			}
 		}
 
