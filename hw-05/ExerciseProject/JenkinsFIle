@@ -1,0 +1,85 @@
+pipeline {
+	agent any
+
+	environment {
+		dotnet = 'C:\\Program Files (x86)\\dotnet\\'
+		SlackChannel = '#deployments'
+	}
+
+	stages {
+		stage('Git') {
+			steps {
+				echo "git clone"
+				echo "git credentialsID: 'exerciseID', url: 'https://github.com/exerciseAccount/exerciseRepository.git', branch: 'main'"
+			}
+		}
+
+		stage('Restore packages') {
+			steps {
+				echo "bat 'dotnet restore ExerciseProjectPath\\ExerciseProject.csproj'"
+			}
+		}
+
+		stage('Clean') {
+			steps {
+				echo "bat 'dotnet clean ExerciseProjectPath\\ExerciseProject.csproj'"
+			}
+		}
+
+		stage('Build') {
+			steps {
+				echo "bat 'dotnet build ExerciseProjectPath\\ExerciseProject.csproj --configuration Release'" 
+			}
+		}
+
+		stage('Test: unit') {
+			steps {
+				echo "dotnet build 'ExerciseProjectPath\\ExerciseProjectUnitTest.csproj'"
+			}
+		}
+		
+		stage('Test: integration') {
+			steps {
+				echo "dotnet build 'ExerciseProjectPath\\ExerciseProjectIntegrationTest.csproj'"
+			}
+		}
+
+		stage('Publish') {
+			steps {
+				echo "bat 'dotnet publish ExerciseProjectPath\\ExerciseProject.csproj'"
+			}
+		}
+
+		stage('Docker build') {
+			steps {
+				echo "docker build -t exerciseApp:1.${BUILD_NUMBER} ."
+			}
+		}
+
+		stage('Docker registry') {
+			steps {
+				echo "docker tag exerciseapp:1.${BUILD_NUMBER} carolinazzz/exerciseapp:1.${BUILD_NUMBER}"
+				echo "docker push carolinazzz/exerciseapp:1.${BUILD_NUMBER}"
+			}
+		}
+
+		stage('Deploy Demo') {
+			// when { anyOf { branch develop; } }
+
+			steps {
+				echo "do stuff"
+				echo "sh('kubectl get namespace demo || kubectl create namespace demo')"
+			}
+		}
+
+		stage('Deploy Pro') {
+			// when { anyOf { branch main; } }
+
+			steps {
+				echo "do stuff"
+				echo "sh('kubectl get namespace production || kubectl create namespace production')"
+				echo "do more stuff and specify url to access service"
+			}
+		}
+	}
+}

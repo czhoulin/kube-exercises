@@ -1,0 +1,23 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exerciseapp
+  labels:
+    app: exerciseapp
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: exerciseapp
+  template:
+    metadata:
+      labels:
+        app: exerciseapp
+    spec:
+      containers:
+      - image: carolinazzz/exerciseapp:1.0
+        imagePullPolicy: Always
+        name: exerciseapp
+        ports:
+          - containerPort: 8080

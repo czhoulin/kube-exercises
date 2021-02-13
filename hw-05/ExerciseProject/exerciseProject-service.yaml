@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: exerciseapp
+  labels:
+    run: exerciseapp
+spec:
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: exerciseapp
+  type: NodePort
