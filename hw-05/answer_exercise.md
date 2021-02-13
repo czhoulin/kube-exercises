@@ -54,24 +54,59 @@ Stages
     - Especificamos el entrypoint para ejecutar la app al iniciar el contenedor.
 9. Push: hacemos login a DockerHub y subimos la imagen al repositorio.
     - docker login
-    - docker tag exerciseapp:1.0 czhoulin/exerciseapp
-    - docker push czhoulin/exerciseapp
+    - docker tag exerciseapp:1.0 carolinazzz/exerciseapp:1.0 
+    - docker push carolinazzz/exerciseapp:1.0
+
 10. Deploy: deployamos al entorno de Kubernetes.
 
 Extras: notificación por slack, ansicolor, libreria externa para usar métodos de construcción, testing, etc.
 
 
-![image](./images/1.png)
+## Annex
 
-Construimos la imagen y la vemos listada
-~~~
-docker build -t exerciseapp:1.0 .
-docker images
-~~~
+Comprobación del funcionamiento de la app contenerizada
 
-Arrancamos el contenedor y lo vemos listado
-~~~
-docker run -d -p 8080:80 --name weatherforecast exerciseapp:1.0
-docker ps
-~~~
+- Construimos la imagen y la vemos listada
+    ~~~
+    docker build -t exerciseapp:1.0 .
+    docker images
+    ~~~
 
+    ![image](./images/1.png)
+
+    ![image](./images/2.png)
+
+- Arrancamos el contenedor y lo vemos listado
+    ~~~
+    docker run -d -p 8080:80 --name weatherforecast exerciseapp:1.0
+    docker ps
+    ~~~
+
+    ![image](./images/3.png)
+
+- Accesible desde el navegador
+
+    ![image](./images/4.png)
+
+- Subimos la imagen al repositorio
+    ~~~
+    docker login
+    docker tag exerciseapp:1.0 carolinazzz/exerciseapp:1.0 
+    docker push carolinazzz/exerciseapp:1.0
+    ~~~
+
+    ![image](./images/5.png)
+
+- Creamos los objetos deployment (los contenedores parten de la imagen subida) y service
+    ~~~
+    kubectl create -f exerciseProject-deployment.yml
+    kubectl get deployment
+    kubectl create -f exerciseProject-service.yml
+    kubectl get svc
+    ~~~
+
+    ![image](./images/6.png)
+
+- Accedemos desde el navegador
+
+    ![image](./images/7.png)
