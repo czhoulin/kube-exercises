@@ -39,9 +39,9 @@ Stages
 
 3. Clean: limpiamos la solución.
 
-4. Build: construimos la solución con comandos CLI dotnet. Se guardarán dlls y otros archivos del build en bin\Debug\netcoreapp2.x. En este stage también se podría añadir SonarQube para automatizar el code quality performance testing.
+4. Build: construimos la solución con comandos CLI dotnet. Se guardarán dlls y otros archivos del build en bin\Debug\netcoreap3.x. En este stage también se podría añadir SonarQube para automatizar el code quality performance testing.
 
-5. Test-unit: pasamos los tests funcionales de la solución con dotnet test o MSTest. Para el proyecto de test se usa xUnit, con herramientas como NSUbstitute, FluentAssertions y ApprovalTests.
+5. Test-unit: pasamos los tests funcionales de la solución con dotnet test o MSTest. Para el proyecto de test se usa xUnit, con herramientas como NSubstitute, FluentAssertions y ApprovalTests.
 
 6. Test-integration: de la misma manera, pasamos los tests de integración. Aquí, aparte de las herramientas mencionadas anteriormente, vemos 
 otras como TestServer (servidor de pruebas en memoria). En las pruebas de integración, para los componentes como el host web del SUT o el test server, se utilizarían paquetes como Microsoft.AspNetCore.Mvc.Testing.
@@ -50,7 +50,7 @@ otras como TestServer (servidor de pruebas en memoria). En las pruebas de integr
 7. Publish: build + packing de la aplicación y todas sus dependencias en una carpeta preparada para publicar.
 
 8. Docker build: construimos la imagen a partir del Dockerfile (multi-stage)
-    - Nota: Si trabajamos con Jekins a través de Docker, no se podrá ejecutar este stage con Docker (Docker-in-Docker). Como alternativa, podríamos usar Kaniko, otra herramienta que permite construir imágenes a partir de un Dockerfile.
+    - Nota: Si trabajamos con Jenkins a través de Docker, no se podrá ejecutar este stage con Docker (Docker-in-Docker). Como alternativa, podríamos usar Kaniko, otra herramienta que permite construir imágenes a partir de un Dockerfile.
 
 9. Docker registry: hacemos login a DockerHub y subimos la imagen al repositorio.
 
@@ -82,7 +82,7 @@ otras como TestServer (servidor de pruebas en memoria). En las pruebas de integr
 
     ![image](./images/13.png)
 
-- Aplicamos nuesro script
+- Aplicamos nuestro script
 
     ![image](./images/14.png)
 
