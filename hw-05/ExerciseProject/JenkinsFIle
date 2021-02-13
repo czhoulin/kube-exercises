@@ -58,14 +58,14 @@ pipeline {
 
 		stage(‘Docker build’) {
 			steps {
-				docker build -t dockerhubuser/exerciseApp:v0.${BUILD_NUMBER} .
+				docker build -t dockerhubuser/exerciseApp:v1.${BUILD_NUMBER} .
 			}
 		}
 
 		stage(‘Docker registry’) {
 			steps {
 				docker login -u dockerhubuser -p dockerhubpassword -e user@domain.com
-				docker push dockerhubuser/exerciseApp:v0.${BUILD_NUMBER}
+				docker push dockerhubuser/exerciseApp:v1.${BUILD_NUMBER}
 			}
 		}
 
