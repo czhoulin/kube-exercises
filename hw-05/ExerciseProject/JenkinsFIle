@@ -7,7 +7,7 @@ pipeline {
 	}
 
 	stages {
-		stage('Start') {
+		stage('Git') {
 			steps {
 				echo "git clone"
 				echo "git credentialsID: 'exerciseID', url: 'https://github.com/exerciseAccount/exerciseRepository.git', branch: 'main'"

@@ -30,28 +30,29 @@ Fases
 - Continuous Deployment
     - Automatic deploy to environment
 
+![image](./images/17.png)
+
 Stages
-1. Start: podemos empezar con un checkout/clon del código de Git al agente especificado.
-2. Nuget Restore: descargamos/restoreamos paquetes NuGet especificados en el proyecto.
+1. Git: podemos empezar con un checkout/clon del código de Git al agente especificado.
+2. Restore packages: descargamos/restoreamos paquetes NuGet especificados en el proyecto.
 3. Clean: limpiamos la solución.
 4. Build: construimos la solución con comandos CLI dotnet. Se guardarán dlls y otros archivos del build en bin\Debug\netcoreapp2.x. En este stage también se podría añadir SonarQube para automatizar el code quality performance testing.
-5. UnitTests: pasamos los tests funcionales de la solución con dotnet test o MSTest. Para el proyecto de test se usa xUnit, con herramientas como NSUbstitute, FluentAssertions y ApprovalTests.
-6. IntegrationTests: de la misma manera, pasamos los tests de integración.
+5. Test-unit: pasamos los tests funcionales de la solución con dotnet test o MSTest. Para el proyecto de test se usa xUnit, con herramientas como NSUbstitute, FluentAssertions y ApprovalTests.
+6. Test-integration: de la misma manera, pasamos los tests de integración.
 7. Publish: build + packing de la aplicación y todas sus dependencias en una carpeta preparada para publicar.
-8. Docker build: construimos la imagen a partir del Dockerfile (multi-stage).
+8. Docker build: construimos la imagen a partir del Dockerfile (multi-stage)
 - Stage 1 - Construimos la app y situamos los archivos correspondientes
-    - Partimos de la imagen mcr.microsoft.com/dotnet/core/sdk:3.1
+    - Partimos de la imagen especificada.
     - Copiamos el archivo .cspoj del proyecto y ejecutamos un restore de las dependencias.
     - Copiamos el resto de archivos y construimos el proyecto, poniéndolo todo en el directorio especificado.
 - Stage 2 - Run
-    - Partimos de la imagen mcr.microsoft.com/dotnet/core/sdk:3.1
+    - Partimos de la imagen especificada.
     - Creamos el working directory ExerciseProject
     - Copiamos los archivos del build del primer stage en dicho directorio.
     - Especificamos el entrypoint para ejecutar la app al iniciar el contenedor.
 9. Docker registry: hacemos login a DockerHub y subimos la imagen al repositorio.
-10. Deploy: deployamos al entorno de Kubernetes.
-
-Extras: notificación por slack, ansicolor, libreria externa para usar métodos de construcción, testing, etc.
+10. Deploy Demo: deployamos al entorno de demo en Kubernetes.
+11. Deploy Pro: deployamos al entorno deproducción en Kubernetes.
 
 ## Simulation
 
